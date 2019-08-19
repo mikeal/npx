@@ -1,40 +1,21 @@
-# GitHub Action for NPM
+# GitHub Action for npx
 
-This Action for [npm](https://www.npmjs.com/) enables arbitrary actions with the `npm` command-line client, including testing packages and publishing to a registry.
+This Action for [npx](https://github.com/zkat/npx#readme) enables arbitrary actions with the `npx` 
+command-line client, which will pull down, install and run arbitrary command line interfaces from npm.
 
 ## Usage
 
 An example workflow to build, test, and publish an npm package to the default public registry follows:
 
 ```hcl
-workflow "Build, Test, and Publish" {
+workflow "Build" {
   on = "push"
   resolves = ["Publish"]
 }
 
-action "Build" {
-  uses = "actions/npm@master"
-  args = "install"
-}
-
-action "Test" {
-  needs = "Build"
-  uses = "actions/npm@master"
-  args = "test"
-}
-
-# Filter for a new tag
-action "Tag" {
-  needs = "Test"
-  uses = "actions/bin/filter@master"
-  args = "tag"
-}
-
-action "Publish" {
-  needs = "Tag"
-  uses = "actions/npm@master"
-  args = "publish --access public"
-  secrets = ["NPM_AUTH_TOKEN"]
+action "Build w/ Webpack" {
+  uses = "mikeal/npx@master"
+  args = "webpack"
 }
 ```
 
@@ -48,35 +29,6 @@ action "Publish" {
 * `NPM_STRICT_SSL` - **Optional**. Specify false if your registry is insecure and uses the `http` protocol. Defaults to `true`
 * `NPM_CONFIG_USERCONFIG` - **Optional**. To specify a non-default per-user configuration file. Defaults to `$HOME/.npmrc` ([more info](https://docs.npmjs.com/misc/config#npmrc-files))
 
-#### Example
-
-To authenticate with, and publish to, a secure registry other than `registry.npmjs.org`:
-
-```hcl
-action "Publish" {
-  uses = "actions/npm@master"
-  args = "publish --access public"
-  env = {
-    NPM_REGISTRY_URL = "someOtherRegistry.someDomain.net"
-  }
-  secrets = ["NPM_AUTH_TOKEN"]
-}
-```
-
-
-To authenticate with, and publish to, an insecure registry other than `registry.npmjs.org`:
-
-```hcl
-action "Publish" {
-  uses = "actions/npm@master"
-  args = "publish --access public"
-  env = {
-    NPM_REGISTRY_URL = "my.local.registry"
-    NPM_STRICT_SSL = "false"
-  }
-  secrets = ["NPM_AUTH_TOKEN"]
-}
-```
 ## License
 
 The Dockerfile and associated scripts and documentation in this project are released under the [MIT License](LICENSE).
