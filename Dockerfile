@@ -15,7 +15,7 @@ COPY "entrypoint.sh" "/entrypoint.sh"
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["help"]
 
-RUN apk --no-cache add openssl git curl openssh-client bash
+RUN apt-get install openssl git curl openssh-client bash
 
 RUN echo CWD `pwd` \
     && mkdir /tmp/lfs \
