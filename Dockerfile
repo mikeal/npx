@@ -17,11 +17,11 @@ CMD ["help"]
 
 RUN apt-get install openssl git curl openssh-client bash
 
-RUN echo CWD `pwd` \
-    && mkdir /tmp/lfs \
-    && cd /tmp/lfs \
-    && curl -sLO https://github.com/git-lfs/git-lfs/releases/download/v2.6.0/git-lfs-linux-amd64-v2.6.0.tar.gz \
-    && tar -zxf git-lfs-linux-amd64-v2.6.0.tar.gz \
-    && ./install.sh \
-    && cd / \
-    && rm -rf /tmp/lfs
+RUN build_deps="curl" && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends ${build_deps} ca-certificates && \
+    curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends git-lfs && \
+    git lfs install && \
+    DEBIAN_FRONTEND=noninteractive apt-get purge -y --auto-remove ${build_deps} && \
+    rm -r /var/lib/apt/lists/*
