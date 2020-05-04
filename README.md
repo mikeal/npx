@@ -1,36 +1,19 @@
 # GitHub Action for npx
 
-This Action for [npx](https://github.com/zkat/npx#readme) enables arbitrary actions with the `npx` 
-command-line client, which will pull down, install and run arbitrary command line interfaces from npm.
+This extension is not required any more as GitHub allows for using `npx` out of the box:
 
-## Usage
-
-An example workflow to build, test, and publish an npm package to the default public registry follows:
-
-```hcl
-workflow "Build" {
-  on = "push"
-  resolves = ["Publish"]
-}
-
-action "Build w/ Webpack" {
-  uses = "mikeal/npx@master"
-  args = "webpack"
-}
+```yaml
+name: Tests
+on: [push,pull]
+jobs:
+  build_latex:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+            node-version: '10.x'
+      - run: npx webpack
 ```
 
-### Secrets
-
-* `NPM_AUTH_TOKEN` - **Optional**. The token to use for authentication with the npm registry. Required for `npm publish` ([more info](https://docs.npmjs.com/getting-started/working_with_tokens))
-
-### Environment variables
-
-* `NPM_REGISTRY_URL` - **Optional**. To specify a registry to authenticate with. Defaults to `registry.npmjs.org`
-* `NPM_STRICT_SSL` - **Optional**. Specify false if your registry is insecure and uses the `http` protocol. Defaults to `true`
-* `NPM_CONFIG_USERCONFIG` - **Optional**. To specify a non-default per-user configuration file. Defaults to `$HOME/.npmrc` ([more info](https://docs.npmjs.com/misc/config#npmrc-files))
-
-## License
-
-The Dockerfile and associated scripts and documentation in this project are released under the [MIT License](LICENSE).
-
-Container images built with this project include third party materials. See [THIRD_PARTY_NOTICE.md](THIRD_PARTY_NOTICE.md) for details.
+See <https://github.com/actions/setup-node> for details
