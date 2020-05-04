@@ -7,16 +7,19 @@ command-line client, which will pull down, install and run arbitrary command lin
 
 An example workflow to build, test, and publish an npm package to the default public registry follows:
 
-```hcl
-workflow "Build" {
-  on = "push"
-  resolves = ["Publish"]
-}
-
-action "Build w/ Webpack" {
-  uses = "mikeal/npx@master"
-  args = "webpack"
-}
+```yaml
+name: Tests
+on: [push]
+jobs:
+  build_latex:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v2
+      - name: Run generator
+        uses: mikeal/npx@master
+        with:
+          args: webpack
 ```
 
 ### Secrets
